@@ -87,6 +87,27 @@ async function run() {
 
     })
 
+    app.put('/updateStatus/:id',async(req,res)=>{
+        const id = req.params.id
+        const data = req.body
+        const filter = { _id: new ObjectId(id) }
+        // const options = { upsert: true }
+        console.log(id);
+        console.log(data);
+        
+        
+        const updateDoc = {
+            $set:{
+               status : data.status, 
+            }
+        }
+
+        const result = await bookdData.updateOne(filter,updateDoc)
+
+        res.send(result)
+
+    })
+
     app.delete('/delete/:id',async(req,res)=>{
         let id = req.params.id
         const query = { _id: new ObjectId(id)}
