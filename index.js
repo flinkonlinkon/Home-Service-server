@@ -26,12 +26,12 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
-    await client.connect();
+    // await client.connect();
     // Send a ping to confirm a successful connection
 
 
 
-    await client.db("admin").command({ ping: 1 });
+    // await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
 
     const homeData = client.db('home').collection('homeData')
@@ -144,9 +144,18 @@ async function run() {
     })
 
     app.get('/alldata',async(req,res)=>{
-        const data = homeData.find()
-        const result = await data.toArray()
-        res.send(result)
+        
+        const findData = req.query.findData;
+
+        const option = {};
+
+        if (findData) {
+            option.serviceName = { $regex: findData, $options: "i" };
+        }
+    
+        const data = homeData.find(option);
+        const result = await data.toArray();
+        res.send(result);
 
     })
 
